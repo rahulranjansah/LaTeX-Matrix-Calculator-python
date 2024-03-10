@@ -1,4 +1,5 @@
 from sympy import *
+import math
 
 # create n numbers of n*n matrix
 def create_matrix(matrix_count, rows, columns):
@@ -129,7 +130,10 @@ def operations():
             return operation_key
         else:
             operation_key = input("Operation key Product -> P and Sum/Subtract -> S: ")
-    
+
+# intermediate steps devlopment
+ 
+
 def main():
     # initialize new .txt file to be copied in LaTeX, future development targets user input to ask if "a" or "w"
     with open("output.txt", "w") as f:
