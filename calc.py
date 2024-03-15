@@ -96,11 +96,14 @@ def add_subtract_matrix(matrix_list):
 # dot product matrix shape (m*n)
 def dot_product_matrix(matrix_list):
     matrix_num = int(input("How many matrix participates in operation? "))
-    
+     
     # latex print of all matrix
     for matrix in matrix_list:
         with open("output.txt", "a") as f:
-            f.write("$"+ latex(matrix) + "$")
+            f.write("$"+ latex(matrix) + "$\n")
+    
+    with open("output.txt", "a") as f:
+        f.write(r"\\Using law of commutativity, we compute dot product of matrices right to left, \\")
 
     # first index defines what is the dimension of matrix after operation, dimensions stays same through out
     first_matrix = matrix_list[int(input("Which will be your Rightmost matrix: "))]
@@ -108,9 +111,30 @@ def dot_product_matrix(matrix_list):
     # initialize rightmost matrix 
     initialize_product = first_matrix
 
+    # intermediate method print
     for _ in range(matrix_num-1):
 
         index = int(input("Inner matrix index: "))
+
+        # intermediate steps
+        steps = ["="]
+        outer_product = initialize_product.T
+        _, c = outer_product.shape
+        n = c
+        outer_product =  outer_product.tolist()
+        i = 0
+
+        for element in outer_product:
+            for atom, column in zip(element, range(matrix_list[index].cols)):
+                step = str(latex(atom)) + str(latex(matrix_list[index].col(column)))
+                steps.append(step)
+                # print((step))
+                i += 1
+                if i % n != 0:
+                    steps.append("+")
+                else:
+                    steps.append("\hspace{0.5cm}")
+        print()
 
         # check dimensions of the matrix
 
@@ -118,6 +142,10 @@ def dot_product_matrix(matrix_list):
             initialize_product = matrix_list[index]*(initialize_product)
         else:
             print("Dimension out of range")
+
+    for _ in steps:
+        with open("output.txt", "a") as f:
+            f.write("\n$" + str(_) + "$")
 
     return initialize_product
          
@@ -148,6 +176,8 @@ def main():
     operation_key = operations()
     # what operation do you want to do?
     if operation_key == "P":
+        # intermediate steps here
+        ...
         product = dot_product_matrix(matrix_list)
         pprint(product)
         # latex_dot_product(matrix_list)
