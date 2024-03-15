@@ -1,0 +1,3 @@
+$\left[\begin{matrix}x & y & z\\a & b & c\\d & e & f\end{matrix}\right]$$\left[\begin{matrix}x & y & c\\a & b & c\\d & e & f\end{matrix}\right]$
+
+$=\left[\begin{matrix}a y + c d + x^{2} & b y + c e + x y & c f + c y + x z\\a b + a x + c d & a y + b^{2} + c e & a z + b c + c f\\a e + d f + d x & b e + d y + e f & c e + d z + f^{2}\end{matrix}\right]$
