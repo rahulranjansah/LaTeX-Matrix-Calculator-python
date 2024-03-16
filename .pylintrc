@@ -1,0 +1,7 @@
+[MESSAGES CONTROL]
+disable=E401,E402,E501,E701,E702
+# Multiple imports on one line
+# Module level import not at top of file
+# Line too long (<LENGTH> > 110 characters)
+# Multiple statements on one line (colon)
+# Multiple statements on one line (semicolon)
