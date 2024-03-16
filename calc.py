@@ -1,8 +1,13 @@
-from sympy import *
+"""
+Main
+"""
+from sympy import Matrix, latex, pprint
 
 # create n numbers of n*n matrix
 def create_matrix(matrix_count, rows, columns):
-
+    """
+    Forms n number of new matrix with "a" rows and "b" columns
+    """
     matrix_list = []
     while matrix_count > 0:
         matrix = []
@@ -29,36 +34,41 @@ def create_matrix(matrix_count, rows, columns):
     return matrix_list
 
 def validate_input():
+    """
+    Validate input reprompts for the input if you miss inputting values
+    """
     while True:
-        try:  
+        try:
             matrix_count = int(input("No. of unique matrix undergoing operations: "))
             if matrix_count > 0:
                 return matrix_count
-            else:
-                print("ValueError: Invalid input. Please enter a positive number.")
         except ValueError:
             print("ValueError: Invalid input. Please enter a positive number.")
 
 def validate_rowcol():
+    """
+    Validates initializing the rows and columns of matrix
+    No negative inputs of rows or column values
+    """
     while True:
         try:
             row = int(input("No. of rows: "))
             col = int(input("No. of columns: "))
             if (row > 0) and (col > 0):
                 return row, col
-            elif (row < 0) or (col < 0):
-                row = int(input("No. of rows: "))
-                col = int(input("No. of columns: "))
 
         except ValueError:
             print("Invalid Input re-enter positive value")
 
 # sum and subtraction of matrix shape (m*n)
 def add_subtract_matrix(matrix_list):
-
+    """
+    Sum/Subtracts n numbers a*b matrix with same dimensions together
+    Additional feature for latex support
+    """
     matrix_num = int(input("How many matrix participates in operation? "))
     latex_operation = []
-    # first index defines what is the dimension of matrix after operation, dimensions stays same through out
+    # first index defines what is the dimension of matrix after operation
     first_index = int(input("Left-most matrix index: "))
     first_matrix = matrix_list[first_index]
 
@@ -66,21 +76,20 @@ def add_subtract_matrix(matrix_list):
     # empty matrix initialize, print index on screen, and rows cols initialize
     operation_sum_sub = first_matrix
 
-    for _ in range(matrix_num - 1): 
-
+    for _ in range(matrix_num - 1):
         index = int(input("Index of matrix to the right: "))
-
-        operation_type = input("What operation do you want to do? Add - press A or a, Subtract - press S or s:: ")
+        operation_type = input("What operation? Add[A] Subtract[S]:: ").upper().strip()
 
         # check dimensions of the matrix
-        if (matrix_list[index].rows == first_matrix.rows) and (matrix_list[index].cols == first_matrix.cols):
+        if (matrix_list[index].rows == first_matrix.rows
+            and matrix_list[index].cols == first_matrix.cols):
 
-            if operation_type == "A" or operation_type == "a":
+            if operation_type == "A":
                 operation_sum_sub += matrix_list[index]
                 latex_operation.append("+")
                 latex_operation.append(matrix_list[index])
 
-            elif operation_type == "S" or operation_type == "s":
+            elif operation_type == "S":
                 operation_sum_sub -= matrix_list[index]
                 latex_operation.append("-")
                 latex_operation.append(matrix_list[index])
@@ -95,21 +104,22 @@ def add_subtract_matrix(matrix_list):
 
 # dot product matrix shape (m*n)
 def dot_product_matrix(matrix_list):
+    """
+    Dot product of n numbers of a*b matrix with proper dimension
+    Latex based output with intermediate steps and final solution
+    """
     matrix_num = int(input("How many matrix participates in operation? "))
-     
+
     # latex print of all matrix
     for matrix in matrix_list:
-        with open("output.txt", "a") as f:
-            f.write("$"+ latex(matrix) + "$\n")
-    
-    with open("output.txt", "a") as f:
-        f.write(r"\\Using law of commutativity, we compute dot product of matrices right to left, \\")
+        with open("output.txt", "a", encoding="utf-8") as output_file:
+            output_file.write("$"+ latex(matrix) + "$\n")
 
-    # first index defines what is the dimension of matrix after operation, dimensions stays same through out
-    first_matrix = matrix_list[int(input("Which will be your Rightmost matrix: "))]
+    with open("output.txt", "a", encoding="utf-8") as output_file:
+        output_file.write(r"\\By law of commutativity, dot product of matrices right to left, \\")
 
-    # initialize rightmost matrix 
-    initialize_product = first_matrix
+    # first index defines what is the dimension of matrix after operation
+    initialize_product = matrix_list[int(input("Which will be your Rightmost matrix: "))]
 
     # intermediate method print
     for _ in range(matrix_num-1):
@@ -119,8 +129,7 @@ def dot_product_matrix(matrix_list):
         # intermediate steps
         steps = ["="]
         outer_product = initialize_product.T
-        _, c = outer_product.shape
-        n = c
+        _, symbol_count = outer_product.shape
         outer_product =  outer_product.tolist()
         i = 0
 
@@ -128,44 +137,50 @@ def dot_product_matrix(matrix_list):
             for atom, column in zip(element, range(matrix_list[index].cols)):
                 step = str(latex(atom)) + str(latex(matrix_list[index].col(column)))
                 steps.append(step)
-                # print((step))
                 i += 1
-                if i % n != 0:
+                if i % symbol_count != 0:
                     steps.append("+")
                 else:
-                    steps.append("\hspace{0.5cm}")
+                    steps.append("\\hspace{0.5cm}")
         print()
 
         # check dimensions of the matrix
 
-        if (matrix_list[index].cols == initialize_product.rows):
+        if matrix_list[index].cols == initialize_product.rows:
             initialize_product = matrix_list[index]*(initialize_product)
         else:
             print("Dimension out of range")
 
-    for _ in steps:
-        with open("output.txt", "a") as f:
-            f.write("\n$" + str(_) + "$")
+        for _ in steps:
+            with open("output.txt", "a", encoding="utf-8") as output_file:
+                output_file.write("\n$" + str(_) + "$")
+
+    print(steps)
 
     return initialize_product
-         
-def operations():
-    while True: 
-        operation_key = input("Operation key Product -> P and Sum/Subtract -> S: ")
 
-        if (operation_key == "S") or (operation_key == "P"):
+def operations():
+    """
+    Choose matrix summation or product
+    """
+    while True:
+        operation_key = input("Operation key Product or Sum/Subtract [P/S]: ").upper().strip()
+
+        if (operation_key in ["S", "P"]):
             return operation_key
-        else:
-            operation_key = input("Operation key Product -> P and Sum/Subtract -> S: ")
-    
+
+
 def main():
-    # initialize new .txt file to be copied in LaTeX, future development targets user input to ask if "a" or "w"
-    with open("output.txt", "w") as f:
-        f.write("")
+    """
+    Calling and Printing all the functions
+    """
+    # initialize new .txt file for LaTeX, future development targets user input to ask if "a" or "w"
+    with open("output.txt", "w", encoding="utf-8") as output_file:
+        output_file.write("")
 
     # validate user values
     validated_count = validate_input()
-    validated_rows, validated_columns = validate_rowcol() 
+    validated_rows, validated_columns = validate_rowcol()
 
     matrix_list = create_matrix(validated_count, validated_rows, validated_columns)
 
@@ -174,30 +189,26 @@ def main():
         pprint(en_matrix)
 
     operation_key = operations()
-    # what operation do you want to do?
+
     if operation_key == "P":
-        # intermediate steps here
-        ...
+        # intermediate steps
         product = dot_product_matrix(matrix_list)
         pprint(product)
         # latex_dot_product(matrix_list)
-        with open("output.txt", "a") as f:
-            f.write("\n\n$="+ latex(product) + "$")
-    
+        with open("output.txt", "a", encoding="utf-8") as output_file:
+            output_file.write("\n\n$="+ latex(product) + "$")
+
     elif operation_key == "S":
         sum_sub, latex_operation = add_subtract_matrix(matrix_list)
         pprint(sum_sub)
         for matrix in latex_operation:
-            with open("output.txt", "a") as f:
-                f.write("$"+ latex(matrix) + "$")
-        with open("output.txt", "a") as f:
-            f.write("\n\n$="+ latex(sum_sub) + "$")
-    
+            with open("output.txt", "a", encoding="utf-8") as output_file:
+                output_file.write("$"+ latex(matrix) + "$")
+        with open("output.txt", "a", encoding="utf-8") as output_file:
+            output_file.write("\n\n$="+ latex(sum_sub) + "$")
+
     else:
         print("Error in input")
-    
+
 if __name__ == "__main__":
     main()
-
-
-
