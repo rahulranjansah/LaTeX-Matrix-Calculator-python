@@ -52,4 +52,4 @@ Contributions to this project are welcome. If you have any suggestions or would 
 
 ## Future Developments
 
-We will be working on adding features to work with trignometeric function, pmatrix options, and showing intermediate steps in n-dimensional matrix multiplication
+We will be working on adding features to work with trignometeric function, pmatrix options, showing row-echelon forms in n-dimensional latex matrix forms, and cross product solutions 
