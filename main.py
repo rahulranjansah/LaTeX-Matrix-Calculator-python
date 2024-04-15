@@ -1,3 +1,4 @@
+# global imports
 from sympy import Matrix, latex, pprint, init_printing, shape
 init_printing(use_unicode=True)
 
@@ -57,11 +58,11 @@ class MatrixBuilder:
         """
         Builds the matrix and stores it in the list for easy user experience
         """
-        matrix_input_validator = MatrixInputValidator()
-        matrix_count = matrix_input_validator.get_matrix_count()
+        # matrix_input_validator = MatrixInputValidator()
+        matrix_count = MatrixInputValidator.get_matrix_count()
         for _ in range(matrix_count):
-            rows = matrix_input_validator.get_rows()
-            columns = matrix_input_validator.get_columns()
+            rows =MatrixInputValidator.get_rows()
+            columns = MatrixInputValidator.get_columns()
             matrix = self.create_matrix(rows, columns)
             self.matrices.append(matrix)
         return self.matrices
@@ -295,7 +296,6 @@ def main():
     MatrixOperations(builder)
     operartionkey = OperationKey(builder)
     operartionkey.choosekey()
-
 
 if __name__ == "__main__":
     main()
