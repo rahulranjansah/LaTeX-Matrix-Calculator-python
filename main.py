@@ -193,67 +193,6 @@ class MatrixOperations:
 
         return output
 
-        # """
-        # Was implemented to add the latex matrices but can be formatted to add as per the input
-        # """
-        # # latex print of all matrix
-        # # for matrix in matrix_list:
-        # #     with open("main_out.tex", "a", encoding="utf-8") as output_file:
-        # #         output_file.write("$"+ latex(matrix) + "$\n")
-
-        # with open("main_out.tex", "a", encoding="utf-8") as output_file:
-        #     output_file.write(r"\\By law of commutativity, dot product of matrices right to left, \\")
-
-        # # first index defines what is the dimension of matrix after operation
-        # initialize_product = matrix_list[int(input("Which will be your Rightmost matrix: "))]
-
-        # with open("main_out.tex", "a", encoding="utf-8") as output_file:
-        #     output_file.write("$"+ latex(initialize_product) + "$\n")
-
-
-        # # intermediate method print
-        # for _ in range(matrix_num-1):
-
-        #     index = int(input("Inner matrix index: "))
-
-        #     # intermediate steps
-        #     steps = ["="]
-        #     outer_product = initialize_product.T
-        #     _, symbol_count = outer_product.shape # for 3 * 2 or 2 * 3 matrix how do we add symbols
-        #     outer_product =  outer_product.tolist()
-        #     i = 0
-
-        #     for element in outer_product: # 1, 2, 3, 5
-        #         for atom, column in zip(element, range(matrix_list[index].cols)):
-        #             step = str(latex(atom)) + str(latex(matrix_list[index].col(column)))
-        #             steps.append(step)
-        #             i += 1
-        #             if i % symbol_count != 0:
-        #                 steps.append("+")
-        #             else:
-        #                 steps.append("\\hspace{0.5cm}")
-        #     print()
-
-        #     # check dimensions of the matrix
-
-        #     if matrix_list[index].cols == initialize_product.rows:
-        #         initialize_product = matrix_list[index]*(initialize_product)
-        #     else:
-        #         print("Dimension out of range")
-
-        #     for _ in steps:
-        #         with open("main_out.tex", "a", encoding="utf-8") as output_file:
-        #             output_file.write("\n$" + str(_) + "$")
-
-        #     print(steps)
-
-        # with open("main_out.tex", "a") as output_file:
-            # output_file.write("\n$" + str(latex(initialize_product)))
-
-
-
-        return output
-
     def reducedref_matrix(self):
         """
         Reduced Row Echelon Forms of the matrix with intermediate steps support and suffles rows when the first
@@ -275,7 +214,7 @@ class MatrixOperations:
                 else:
                     continue
 
-        with open("rref.tex", "w", encoding="utf-8") as output_file:
+        with open("rref1.tex", "w", encoding="utf-8") as output_file:
             output_file.write("$$"+ latex(rref_matrix) + "$$\n")
 
         for i in range(min(rref_matrix_row, rref_matrix_col)):
@@ -284,6 +223,7 @@ class MatrixOperations:
             else:
                 with open("rref1.tex", "a", encoding="utf-8") as output_file:
                     output_file.write(f"$$\\frac{(1)}{({rref_matrix[i,i]})} R_{{{i+1}}} \\rightarrow R_{{{i+1}}}$$\n")
+
                 rref_matrix[i, :] = (rref_matrix[i,:]/rref_matrix[i,i])
 
             for j in range(rref_matrix_row):
@@ -296,24 +236,24 @@ class MatrixOperations:
 
                     rref_matrix[j,:] = rref_matrix[j,:] - (rref_matrix[j,i]*rref_matrix[i,:])
                     with open("rref1.tex", "a", encoding="utf-8") as output_file:
-                        # output_file.write("$\\longrightarrow$\n")
                         output_file.write("$$"+ latex(rref_matrix) + "$$\n")
 
         pprint(rref_matrix)
 
         with open("rref1.tex", "a", encoding="utf-8") as output_file:
-            # output_file.write("$\\longrightarrow$\n")
             output_file.write(f"$$Pivot:"+ str(pivot) + "$$\n")
 
     def rowef_matrix(self):
         """
-        Row Echelon forms for the matrix with concept of intermediate steps,
-        Full LaTeX support to be initiated soon
+        Row Echelon forms for the matrix with concept of intermediate steps
         """
         matrix_list = self.builder.matrices
         index = int(input("Index of the matrix to ref:: "))
         ref_matrix = matrix_list[index]
         ref_matrix_row, ref_matrix_col = shape(ref_matrix)
+
+        with open("ref.tex", "w", encoding="utf-8") as output_file:
+            output_file.write("$$"+ latex(ref_matrix) + "$$\n")
 
         if ref_matrix[0,0] == 0:
             for i in range(ref_matrix_row):
@@ -326,9 +266,21 @@ class MatrixOperations:
 
         for i in range(min(ref_matrix_row, ref_matrix_col)):
             for j in range(i+1,ref_matrix_row):
+
                 if ref_matrix[i,i] != 0:
+
+                    # Write the operation to the LaTeX file
+                    with open("ref.tex", "a", encoding="utf-8") as output_file:
+                        output_file.write(f"$$\\frac{(1)}{({ref_matrix[i,i]})} R_{{{i+1}}} \\rightarrow R_{{{i+1}}}$$\n")
+
+                    with open("ref.tex", "a", encoding="utf-8") as output_file:
+                        output_file.write(f"$$R_{{{j+1}}} - ({ref_matrix[j,i]}) \\cdot R_{{{i+1}}} \\rightarrow R_{{{j+1}}}$$\n")
+
                     factor = ref_matrix[j,i]/ref_matrix[i,i]
                     ref_matrix[j,:] = ref_matrix[j,:] - (factor * ref_matrix[i,:])
+
+                    with open("ref.tex", "a", encoding="utf-8") as output_file:
+                        output_file.write("$$"+ latex(ref_matrix) + "$$\n")
 
         pprint(ref_matrix)
 
