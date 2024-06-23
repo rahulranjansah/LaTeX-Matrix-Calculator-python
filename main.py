@@ -130,57 +130,129 @@ class MatrixOperations:
         Dot product of n numbers of a*b matrix with proper dimension
         Latex based output with intermediate steps and final solution
         """
-        matrix_list = self.builder.matrices
-        matrix_num = int(input("How many matrix participates in operation? "))
+        initial_matrix = self.builder.matrices
+        matrix_list = []
 
-        # latex print of all matrix
-        for matrix in matrix_list:
-            with open("output.txt", "a", encoding="utf-8") as output_file:
-                output_file.write("$"+ latex(matrix) + "$\n")
+        with open("main_out.tex", "w", encoding="utf-8") as output_file:
+            output_file.write("")
 
-        with open("output.txt", "a", encoding="utf-8") as output_file:
-            output_file.write(r"\\By law of commutativity, dot product of matrices right to left, \\")
+        i = 0
+        matrix_participants = int(input("How many matrix participates in operation? "))
+        rightmost = int(input("Index of the rightmost matrix: "))
+        matrix_list.append(initial_matrix[rightmost])
 
-        # first index defines what is the dimension of matrix after operation
-        initialize_product = matrix_list[int(input("Which will be your Rightmost matrix: "))]
+        for _ in range(matrix_participants - 1):
+            innermatrix = int(input("Index of the inner matrix: "))
+            matrix_list.append(initial_matrix[innermatrix])
 
-        # intermediate method print
-        for _ in range(matrix_num-1):
+        matrix_list = list(reversed(matrix_list))
+        steps = []
 
-            index = int(input("Inner matrix index: "))
+        with open("main_out.tex", "a", encoding="utf-8") as output_file:
+            for matrices in matrix_list:
+                output_file.write("$" + latex(matrices) + "$")
+            output_file.write("\n" + "\\hspace{0.5cm}")
 
-            # intermediate steps
-            steps = ["="]
-            outer_product = initialize_product.T
-            _, symbol_count = outer_product.shape
-            outer_product =  outer_product.tolist()
-            i = 0
+        # Iterate through the matrices, stopping before the last one since we're looking ahead by one matrix
+        for idx in range(matrix_participants - 1):
+            rightmost_matrix = matrix_list.pop()
+            rightmost_matrix_transpose = rightmost_matrix.T # Transpose the current matrix to work with its rows
+            _, symbol_count = rightmost_matrix_transpose.shape
+            next_matrix = matrix_list.pop()  # The next matrix to the left
 
-            for element in outer_product:
-                for atom, column in zip(element, range(matrix_list[index].cols)):
-                    step = str(latex(atom)) + str(latex(matrix_list[index].col(column)))
-                    steps.append(step)
-                    i += 1
-                    if i % symbol_count != 0:
-                        steps.append("+")
-                    else:
-                        steps.append("\\hspace{0.5cm}")
-            print()
+            for row in rightmost_matrix_transpose.tolist():  # Convert each row of the transposed matrix to a list
+                row_steps = []
 
-            # check dimensions of the matrix
+                for element, column in zip(row, range(next_matrix.cols)):
+                    # Perform the dot product and format it in LaTeX
+                    dot_product_step = f"{latex(element)}{latex(next_matrix.col(column))}"
+                    row_steps.append(dot_product_step)
 
-            if matrix_list[index].cols == initialize_product.rows:
-                initialize_product = matrix_list[index]*(initialize_product)
+                i += 1
+                if i % symbol_count != 0:
+                    row_steps.append("+")
+                else:
+                    row_steps.append("\\hspace{0.5cm}")
+                steps.append("".join(row_steps))
+
+            output = rightmost_matrix * next_matrix
+
+            if not matrix_list:
+                break
             else:
-                print("Dimension out of range")
+                matrix_list.append(output)
 
-            for _ in steps:
-                with open("output.txt", "a", encoding="utf-8") as output_file:
-                    output_file.write("\n$" + str(_) + "$")
+        # Write these steps to a file
+        with open("main_out.tex", "a", encoding="utf-8") as output_file:
+            for step in steps:
+                output_file.write("$" + step + "$" + "\n")
 
-        print(steps)
+            output_file.write("$" + latex(output) + "$")
 
-        return initialize_product
+        print(output)
+
+        return output
+
+        # """
+        # Was implemented to add the latex matrices but can be formatted to add as per the input
+        # """
+        # # latex print of all matrix
+        # # for matrix in matrix_list:
+        # #     with open("main_out.tex", "a", encoding="utf-8") as output_file:
+        # #         output_file.write("$"+ latex(matrix) + "$\n")
+
+        # with open("main_out.tex", "a", encoding="utf-8") as output_file:
+        #     output_file.write(r"\\By law of commutativity, dot product of matrices right to left, \\")
+
+        # # first index defines what is the dimension of matrix after operation
+        # initialize_product = matrix_list[int(input("Which will be your Rightmost matrix: "))]
+
+        # with open("main_out.tex", "a", encoding="utf-8") as output_file:
+        #     output_file.write("$"+ latex(initialize_product) + "$\n")
+
+
+        # # intermediate method print
+        # for _ in range(matrix_num-1):
+
+        #     index = int(input("Inner matrix index: "))
+
+        #     # intermediate steps
+        #     steps = ["="]
+        #     outer_product = initialize_product.T
+        #     _, symbol_count = outer_product.shape # for 3 * 2 or 2 * 3 matrix how do we add symbols
+        #     outer_product =  outer_product.tolist()
+        #     i = 0
+
+        #     for element in outer_product: # 1, 2, 3, 5
+        #         for atom, column in zip(element, range(matrix_list[index].cols)):
+        #             step = str(latex(atom)) + str(latex(matrix_list[index].col(column)))
+        #             steps.append(step)
+        #             i += 1
+        #             if i % symbol_count != 0:
+        #                 steps.append("+")
+        #             else:
+        #                 steps.append("\\hspace{0.5cm}")
+        #     print()
+
+        #     # check dimensions of the matrix
+
+        #     if matrix_list[index].cols == initialize_product.rows:
+        #         initialize_product = matrix_list[index]*(initialize_product)
+        #     else:
+        #         print("Dimension out of range")
+
+        #     for _ in steps:
+        #         with open("main_out.tex", "a", encoding="utf-8") as output_file:
+        #             output_file.write("\n$" + str(_) + "$")
+
+        #     print(steps)
+
+        # with open("main_out.tex", "a") as output_file:
+            # output_file.write("\n$" + str(latex(initialize_product)))
+
+
+
+        return output
 
     def reducedref_matrix(self):
         """
