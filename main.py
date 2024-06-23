@@ -131,6 +131,7 @@ class MatrixOperations:
         Dot product of n numbers of a*b matrix with proper dimension
         Latex based output with intermediate steps and final solution
         """
+        vertical_spacer = 0
         initial_matrix = self.builder.matrices
         matrix_list = []
 
@@ -150,15 +151,15 @@ class MatrixOperations:
 
         with open("main_out.tex", "a", encoding="utf-8") as output_file:
             for matrices in matrix_list:
-                output_file.write("$" + latex(matrices) + "$")
-            output_file.write("\n" + "\\hspace{0.5cm}")
+                output_file.write("$" + latex(matrices) + "$\n")
+            output_file.write("\n" + "\\vspace{0.5cm}" + "\n")
 
         # Iterate through the matrices, stopping before the last one since we're looking ahead by one matrix
         for idx in range(matrix_participants - 1):
             rightmost_matrix = matrix_list.pop()
             rightmost_matrix_transpose = rightmost_matrix.T # Transpose the current matrix to work with its rows
             _, symbol_count = rightmost_matrix_transpose.shape
-            i = 0
+            formatting_hor = 0
             next_matrix = matrix_list.pop()  # The next matrix to the left
 
             for row in rightmost_matrix_transpose.tolist():  # Convert each row of the transposed matrix to a list
@@ -169,13 +170,18 @@ class MatrixOperations:
                     dot_product_step = f"{latex(element)}{latex(next_matrix.col(column))}"
                     row_steps.append(dot_product_step)
 
-                    i += 1
-                    if i % symbol_count != 0:
+                    formatting_hor += 1
+                    vertical_spacer += 1
+                    if formatting_hor % symbol_count != 0:
                         row_steps.append("+")
                     else:
                         row_steps.append("\\hspace{0.5cm}")
 
                 steps.append("".join(row_steps))
+
+                if vertical_spacer % 4 == 0:
+                    steps.append("\\vspace{0.5cm}" + "\n")
+
 
             output = rightmost_matrix * next_matrix
             # output = simplify(output)
@@ -188,7 +194,10 @@ class MatrixOperations:
         # Write these steps to a file
         with open("main_out.tex", "a", encoding="utf-8") as output_file:
             for step in steps:
-                output_file.write("$" + step + "$" + "\n")
+                if step.strip() == "\\vspace{0.5cm}":
+                    output_file.write(step + "\n")
+                else:
+                    output_file.write("$" + step + "$" + "\n")
 
             output_file.write("$" + latex(output) + "$")
 
