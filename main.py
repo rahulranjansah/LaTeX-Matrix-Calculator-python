@@ -1,5 +1,5 @@
 # global imports
-from sympy import Matrix, latex, pprint, init_printing, shape
+from sympy import Matrix, latex, pprint, init_printing, shape, sympify, simplify
 init_printing(use_unicode=True)
 
 class MatrixInputValidator:
@@ -43,14 +43,15 @@ class MatrixBuilder:
         self.matrices = []
 
     def create_matrix(self, rows, columns):
-        """This function asks user values input elements at every place
+        """This function asks user values input symbolic elements at every place
         """
         matrix = []
         for i in range(rows):
             row = []
             for j in range(columns):
                 entry = input(f"Enter value for Row {i+1}, Column {j+1}: ")
-                row.append(entry)
+                symbolic_entry = sympify(entry)
+                row.append(symbolic_entry)
             matrix.append(row)
         return Matrix(matrix)
 
@@ -136,7 +137,6 @@ class MatrixOperations:
         with open("main_out.tex", "w", encoding="utf-8") as output_file:
             output_file.write("")
 
-        i = 0
         matrix_participants = int(input("How many matrix participates in operation? "))
         rightmost = int(input("Index of the rightmost matrix: "))
         matrix_list.append(initial_matrix[rightmost])
@@ -158,6 +158,7 @@ class MatrixOperations:
             rightmost_matrix = matrix_list.pop()
             rightmost_matrix_transpose = rightmost_matrix.T # Transpose the current matrix to work with its rows
             _, symbol_count = rightmost_matrix_transpose.shape
+            i = 0
             next_matrix = matrix_list.pop()  # The next matrix to the left
 
             for row in rightmost_matrix_transpose.tolist():  # Convert each row of the transposed matrix to a list
@@ -168,14 +169,16 @@ class MatrixOperations:
                     dot_product_step = f"{latex(element)}{latex(next_matrix.col(column))}"
                     row_steps.append(dot_product_step)
 
-                i += 1
-                if i % symbol_count != 0:
-                    row_steps.append("+")
-                else:
-                    row_steps.append("\\hspace{0.5cm}")
+                    i += 1
+                    if i % symbol_count != 0:
+                        row_steps.append("+")
+                    else:
+                        row_steps.append("\\hspace{0.5cm}")
+
                 steps.append("".join(row_steps))
 
             output = rightmost_matrix * next_matrix
+            # output = simplify(output)
 
             if not matrix_list:
                 break
@@ -235,6 +238,7 @@ class MatrixOperations:
                         output_file.write(f"$$R_{{{j+1}}} - ({rref_matrix[j,i]}) \\cdot R_{{{i+1}}} \\rightarrow R_{{{j+1}}}$$\n")
 
                     rref_matrix[j,:] = rref_matrix[j,:] - (rref_matrix[j,i]*rref_matrix[i,:])
+
                     with open("rref1.tex", "a", encoding="utf-8") as output_file:
                         output_file.write("$$"+ latex(rref_matrix) + "$$\n")
 
@@ -278,6 +282,7 @@ class MatrixOperations:
 
                     factor = ref_matrix[j,i]/ref_matrix[i,i]
                     ref_matrix[j,:] = ref_matrix[j,:] - (factor * ref_matrix[i,:])
+                    ref_matrix = simplify(ref_matrix)
 
                     with open("ref.tex", "a", encoding="utf-8") as output_file:
                         output_file.write("$$"+ latex(ref_matrix) + "$$\n")
