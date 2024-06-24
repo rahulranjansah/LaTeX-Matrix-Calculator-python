@@ -302,6 +302,35 @@ class MatrixOperations:
 
         pprint(ref_matrix)
 
+        return ref_matrix
+
+    # inverse function (new to be completed)
+
+    def inverse_matrix(self):
+
+        """
+        Computing and chekcing inverse of the given matrix
+        """
+
+        """some error over here in buliding the matrix"""
+        # matrix_list = self.builder.matrices
+        operations = MatrixOperations(self.builder.matrices)
+        ref_matrix = operations.rowef_matrix()
+
+        check_inverse = 1
+
+        for rows in len(ref_matrix):
+            for columns in len(ref_matrix[0]):
+                if rows == columns:
+                    check_inverse *= ref_matrix[rows, columns]
+
+        if check_inverse == 0:
+            print("No inverse for the given matrix")
+        else:
+            print("Inverse exists")
+
+
+
 class OperationKey:
     """
     Operation Key class parse through key catalogue
@@ -314,8 +343,8 @@ class OperationKey:
         """
         Module to choose what operation user wants to perform
         """
-        key = input("Choose Operation Key SUM/SUBTRACT or PRODUCT or RREF or REF [S/P/RR/R]:: ").upper().strip()
-        if key in (["S", "P", "RR", "R"]):
+        key = input("Choose Operation Key SUM/SUBTRACT or PRODUCT or RREF or REF [S/P/RR/R/I]:: ").upper().strip()
+        if key in (["S", "P", "RR", "R", "I"]):
             if key == "S":
                 self.operations.add_subtract_matrix()
             elif key == "P":
@@ -324,6 +353,8 @@ class OperationKey:
                 self.operations.reducedref_matrix()
             elif key == "R":
                 self.operations.rowef_matrix()
+            elif key == "I":
+                self.operations.inverse_matrix()
         else:
             print("Wrong Key")
 
