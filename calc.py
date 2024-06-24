@@ -112,10 +112,10 @@ def dot_product_matrix(matrix_list):
 
     # latex print of all matrix
     for matrix in matrix_list:
-        with open("output.txt", "a", encoding="utf-8") as output_file:
+        with open("output.tex", "a", encoding="utf-8") as output_file:
             output_file.write("$"+ latex(matrix) + "$\n")
 
-    with open("output.txt", "a", encoding="utf-8") as output_file:
+    with open("output.tex", "a", encoding="utf-8") as output_file:
         output_file.write(r"\\By law of commutativity, dot product of matrices right to left, \\")
 
     # first index defines what is the dimension of matrix after operation
@@ -152,7 +152,7 @@ def dot_product_matrix(matrix_list):
             print("Dimension out of range")
 
         for _ in steps:
-            with open("output.txt", "a", encoding="utf-8") as output_file:
+            with open("output.tex", "a", encoding="utf-8") as output_file:
                 output_file.write("\n$" + str(_) + "$")
 
     print(steps)
@@ -195,14 +195,14 @@ def main():
         product = dot_product_matrix(matrix_list)
         pprint(product)
         # latex_dot_product(matrix_list)
-        with open("output.txt", "a", encoding="utf-8") as output_file:
+        with open("output.tex", "a", encoding="utf-8") as output_file:
             output_file.write("\n\n$="+ latex(product) + "$")
 
     elif operation_key == "S":
         sum_sub, latex_operation = add_subtract_matrix(matrix_list)
         pprint(sum_sub)
         for matrix in latex_operation:
-            with open("output.txt", "a", encoding="utf-8") as output_file:
+            with open("output.tex", "a", encoding="utf-8") as output_file:
                 output_file.write("$"+ latex(matrix) + "$")
         with open("output.txt", "a", encoding="utf-8") as output_file:
             output_file.write("\n\n$="+ latex(sum_sub) + "$")

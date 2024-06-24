@@ -292,7 +292,10 @@ class MatrixOperations:
 
                     factor = ref_matrix[j,i]/ref_matrix[i,i]
                     ref_matrix[j,:] = ref_matrix[j,:] - (factor * ref_matrix[i,:])
-                    ref_matrix = simplify(ref_matrix)
+
+                    # place to work in future
+
+                    # ref_matrix = simplify(ref_matrix)
 
                     with open("ref.tex", "a", encoding="utf-8") as output_file:
                         output_file.write("$$"+ latex(ref_matrix) + "$$\n")
