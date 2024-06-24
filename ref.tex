@@ -1,0 +1,17 @@
+\documentclass{article}
+\usepackage{amsmath}
+
+\begin{document}
+
+$$\left[\begin{matrix}\sin{\left(x \right)} & \cos{\left(x \right)}\\2 & 3\\x & 0\end{matrix}\right]$$
+$$\frac1{sin(x)} R_{1} \rightarrow R_{1}$$
+$$R_{2} - (2) \cdot R_{1} \rightarrow R_{2}$$
+$$\left[\begin{matrix}\sin{\left(x \right)} & \cos{\left(x \right)}\\0 & 3 - \frac{2 \cos{\left(x \right)}}{\sin{\left(x \right)}}\\x & 0\end{matrix}\right]$$
+$$\frac1{sin(x)} R_{1} \rightarrow R_{1}$$
+$$R_{3} - (x) \cdot R_{1} \rightarrow R_{3}$$
+$$\left[\begin{matrix}\sin{\left(x \right)} & \cos{\left(x \right)}\\0 & 3 - \frac{2 \cos{\left(x \right)}}{\sin{\left(x \right)}}\\0 & - \frac{x \cos{\left(x \right)}}{\sin{\left(x \right)}}\end{matrix}\right]$$
+$$\frac1{3 - 2*cos(x)/sin(x)} R_{2} \rightarrow R_{2}$$
+$$R_{3} - (-x*cos(x)/sin(x)) \cdot R_{2} \rightarrow R_{3}$$
+$$\left[\begin{matrix}\sin{\left(x \right)} & \cos{\left(x \right)}\\0 & 3 - \frac{2 \cos{\left(x \right)}}{\sin{\left(x \right)}}\\0 & 0\end{matrix}\right]$$
+
+\end{document}
