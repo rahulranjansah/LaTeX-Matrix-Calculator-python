@@ -135,8 +135,8 @@ class MatrixOperations:
         initial_matrix = self.builder.matrices
         matrix_list = []
 
-        with open("main_out.tex", "w", encoding="utf-8") as output_file:
-            output_file.write("")
+        with open("product.tex", "a", encoding="utf-8") as output_file:
+            output_file.write("\n" + "\\vspace{2.0cm}" + "\n\n")
 
         matrix_participants = int(input("How many matrix participates in operation? "))
         rightmost = int(input("Index of the rightmost matrix: "))
@@ -149,7 +149,7 @@ class MatrixOperations:
         matrix_list = list(reversed(matrix_list))
         steps = []
 
-        with open("main_out.tex", "a", encoding="utf-8") as output_file:
+        with open("product.tex", "a", encoding="utf-8") as output_file:
             for matrices in matrix_list:
                 output_file.write("$" + latex(matrices) + "$\n")
             output_file.write("\n" + "\\vspace{0.5cm}" + "\n")
@@ -158,7 +158,8 @@ class MatrixOperations:
         for idx in range(matrix_participants - 1):
             rightmost_matrix = matrix_list.pop()
             rightmost_matrix_transpose = rightmost_matrix.T # Transpose the current matrix to work with its rows
-            _, symbol_count = rightmost_matrix_transpose.shape
+            rows_spacing, column_spacing = rightmost_matrix_transpose.shape
+            line_breaks = rows_spacing * column_spacing
             formatting_hor = 0
             next_matrix = matrix_list.pop()  # The next matrix to the left
 
@@ -172,19 +173,19 @@ class MatrixOperations:
 
                     formatting_hor += 1
                     vertical_spacer += 1
-                    if formatting_hor % symbol_count != 0:
+                    if formatting_hor % column_spacing != 0:
                         row_steps.append("+")
                     else:
                         row_steps.append("\\hspace{0.5cm}")
 
                 steps.append("".join(row_steps))
 
-                if vertical_spacer % 4 == 0:
+                if vertical_spacer % line_breaks  == 0:
                     steps.append("\\vspace{0.5cm}" + "\n")
 
 
             output = rightmost_matrix * next_matrix
-            # output = simplify(output)
+            output = simplify(output)
 
             if not matrix_list:
                 break
@@ -192,7 +193,7 @@ class MatrixOperations:
                 matrix_list.append(output)
 
         # Write these steps to a file
-        with open("main_out.tex", "a", encoding="utf-8") as output_file:
+        with open("product.tex", "a", encoding="utf-8") as output_file:
             for step in steps:
                 if step.strip() == "\\vspace{0.5cm}":
                     output_file.write(step + "\n")
