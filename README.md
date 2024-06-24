@@ -1,5 +1,5 @@
 # Latex_Matrix_calcuator
-A matrix calculator for solving matrix of shape m*n. It has built-in feature of getting latex output of the computation in .txt format, which could be copied in .tex files.
+A matrix calculator for solving matrix of shape m*n. It has built-in feature of getting latex output of the computation in .tex and .pdf format support with clean formatting for REFs, RREFs, Arithmetic operations, and Dot product
 
 
 ## Prerequisites
@@ -37,7 +37,7 @@ To use the matrix calculator, follow these steps:
 1. To start, run the following command
 
    ```shell/terminal
-    python3 calc.py
+    python3 main.py
     ```
 
 2. Enter the matrix elements in the terminal window, following the supported matrix format.
@@ -50,6 +50,15 @@ To use the matrix calculator, follow these steps:
 
 Contributions to this project are welcome. If you have any suggestions or would like to add new features, please create a new issue or submit a pull request.
 
+## Updates
+- Code architechture has been restructured to develop a full-blown working software.
+
+- n-dimensional support for dot-products, RREF, and REF problems with tex-pdf support
+
+- Step-by-step solutions for all the problems
+
+- sample tex and pdf has been committed
+
 ## Future Developments
 
-We will be working on adding features to work with trignometeric function, pmatrix options, showing row-echelon forms in n-dimensional latex matrix forms, and cross product solutions 
+We will be working on adding features to work with trignometeric function, pmatrix options, inverses, diagonalization, eigenvalues of matrices and hopefully, GPUs based architecture for support
