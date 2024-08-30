@@ -1,5 +1,4 @@
 sympy
 numpy
 pytest
-untitest.mock
-math
+mock
